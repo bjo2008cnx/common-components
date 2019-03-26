@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=E:/codes-pt/common-components/components-config/bin/apollo-client-1.0.0.jar -DgroupId=com.ctrip.framework.apollo -DartifactId=apollo-client -Dversion=1.0.0  -Dpackaging=jar

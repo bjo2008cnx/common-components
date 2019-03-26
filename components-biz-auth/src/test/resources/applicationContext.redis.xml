@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+    <!-- use annotation -->
+    <context:annotation-config/>
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <!--<context:component-scan base-package="com.github.common.cache.redis"></context:component-scan>-->
+
+    <bean id="redisClientInfo" class="com.github.common.components.cache.client.factory.RedisClientInfo">
+        <property name="host" value="47.97.91.50"></property>
+        <property name="port" value="6379"></property>
+        <property name="instanceid" value="db0"></property>
+        <property name="password" value="k7lla2rL7qdR9vP2"></property>
+    </bean>
+
+    <bean id="redisClientInfoLocal" class="com.github.common.components.cache.client.factory.RedisClientInfo">
+        <property name="host" value="127.0.0.1"></property>
+        <property name="port" value="6379"></property>
+        <property name="instanceid" value="db0"></property>
+        <property name="password" value=""></property>
+    </bean>
+
+    <bean id="simpleRedisClient" class="com.github.common.components.cache.client.factory.RedisClientFactoryBean" scope="singleton">
+        <property name="timeout" value="2000"></property>
+        <property name="maxWait" value="3000"></property>
+        <property name="maxActive" value="300"></property>
+        <property name="redisClientInfo" ref="redisClientInfoLocal"></property>
+        <property name="testOnBorrow" value="true"></property>
+        <property name="testOnReturn" value="true"></property>
+    </bean>
+</beans>

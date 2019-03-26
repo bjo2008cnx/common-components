@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="OFF">
+    <Properties>
+        <Property name="PROJECT_NAME">artemis-broker</Property>
+        <Property name="LOG_HOME">/data/applogs/${PROJECT_NAME}/logs</Property>
+        <Property name="appFileName">${LOG_HOME}/app.log</Property>
+        <Property name="appFilePattern">${LOG_HOME}/app.log.%d{yyyy-MM-dd}.%i</Property>
+        <Property name="warnFileName">${LOG_HOME}/warn.log</Property>
+        <Property name="warnFilePattern">${LOG_HOME}/warn.log.%d{yyyy-MM-dd}</Property>
+        <Property name="errorFileName">${LOG_HOME}/error.log</Property>
+        <Property name="errorFilePattern">${LOG_HOME}/error.log.%d{yyyy-MM-dd}</Property>
+        <!--<Property name="pattern">[${PROJECT_NAME}][%-d{yy-MM-dd HH:mm:ss.SSS}] %5p [%t] %c{1.}.%M:%L - %m%n</Property>-->
+        <Property name="pattern">[${PROJECT_NAME}][%-d{yy-MM-dd HH:mm:ss.SSS}] %5p [%t] %c{1.}.%M:%L %X{globalTraceId} - %m%n </Property>
+    </Properties>
+
+    <Appenders>
+        <CatAppender name="catAppender">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+        </CatAppender>
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${pattern}"/>
+        </Console>
+
+        <RollingFile name="appAppender" fileName="${appFileName}" filePattern="${appFilePattern}">
+            <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <!-- 每天生成一个日志文件 -->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <!-- 每到20M生成一个日志文件 -->
+                <SizeBasedTriggeringPolicy size="500MB"/>
+            </Policies>
+            <!-- 最大保存文件数 -->
+            <DefaultRolloverStrategy max="16"/>
+        </RollingFile>
+
+        <RollingFile name="errorAppender" fileName="${errorFileName}" filePattern="${errorFilePattern}">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="16"/>
+        </RollingFile>
+        <RollingFile name="warnAppender" fileName="${warnFileName}" filePattern="${warnFilePattern}">
+            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="16"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="org.eclipse.jetty" level="WARN"/>
+        <Logger name="com.ctrip.framework.apollo" level="WARN"/>
+        <Logger name="org.apache.kafka" level="INFO"/>
+        <Logger name="com.alibaba.dubbo" level="WARN"/>
+        <Logger name="org.apache.zookeeper" level="WARN"/>
+        <Logger name="com.github" level="WARN"/>
+        <Logger name="com.alibaba.druid.filter.stat" level="ERROR" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+            <appender-ref ref="catAppender"/>
+            <AppenderRef ref="appAppender"/>
+            <AppenderRef ref="errorAppender"/>
+        </Root>
+    </Loggers>
+</Configuration>

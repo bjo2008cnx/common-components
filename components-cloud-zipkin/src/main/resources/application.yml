@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: zipkin-server
+server:
+  port: 9411
+eureka:
+  client:
+    service-url:
+     defaultZone: http://localhost:8761/eureka/
+logging:
+  level:
+    root: INFO
+    org.springframework.web.servlet.DispatcherServlet: DEBUG
+    org.springframework.cloud.sleuth: DEBUG

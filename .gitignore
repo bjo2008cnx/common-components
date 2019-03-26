@@ -1,0 +1,16 @@
+.idea
+.classpath
+/dist
+/target
+/*/target/
+.tmp
+Thumbs.db
+[Tt]est[Rr]esult*
+*.class
+output_zip/
+*/build/
+*/gen/*
+node_modules
+!.gitignore
+*.iml
+classes
